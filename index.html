@@ -44,7 +44,7 @@ input,textarea,select{background:white;color:#0f1419;border-color:#cfd9de}label{
 .thread.detail .tweet:first-child .bodyText{font-size:17px;line-height:1.45}
 .thread.detail .tweet:first-child .stats{padding-top:9px;border-top:1px solid #eff3f4}
 @media(max-width:880px){.thread{min-width:530px}.canvasWrap{overflow-x:auto}}
-</style></head><body>
+.postEditor{padding:10px 12px;margin:8px 0}.postHead{gap:5px}.postHead button{padding:5px 8px}.editorToggle{flex:1;text-align:left;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background:transparent;border:0;font-weight:700;color:#0f1419}.editorFields{margin-top:6px}.editorFields label{margin:6px 0 3px}.editorFields textarea{min-height:62px}.advancedEditor{margin-top:9px;border-top:1px solid #e3e9ed;padding-top:9px}.advancedEditor summary{cursor:pointer;color:#1d9bf0;font-size:13px;padding:4px 0}.advancedEditor[open] .fields{margin-top:5px}.advancedEditor textarea{min-height:50px}.postEditor input,.postEditor select,.postEditor textarea{padding:7px 8px} </style></head><body>
 <header><h1>X風ツイート・リプライメーカー</h1><p>1936年の架空SNSにも。画像・プロフィール・数字を自由に編集し、会話ごとPNGに保存。</p></header>
 <main class="layout"><section class="panel"><div class="toolbar">
 <button class="primary" id="add">＋投稿を追加</button><button id="save">JSON保存</button><label class="fileButton">JSON読込<input type="file" id="load" accept=".json,application/json"></label><button id="reset">初期化</button></div>
@@ -64,12 +64,43 @@ let theme='dark';
 const el=id=>document.getElementById(id);
 const escapeHTML=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 function persist(){try{localStorage.setItem(key,JSON.stringify(posts))}catch{}}
-function makeEditor(p,i){const wrap=document.createElement('div');wrap.className='postEditor';const heading=document.createElement('div');heading.className='postHead';heading.innerHTML='<b>投稿 '+(i+1)+'</b>';const moveUp=document.createElement('button');moveUp.textContent='↑';moveUp.disabled=i===0;moveUp.onclick=()=>{[posts[i-1],posts[i]]=[posts[i],posts[i-1]];update()};const moveDown=document.createElement('button');moveDown.textContent='↓';moveDown.disabled=i===posts.length-1;moveDown.onclick=()=>{[posts[i+1],posts[i]]=[posts[i],posts[i+1]];update()};const remove=document.createElement('button');remove.textContent='削除';remove.disabled=posts.length===1;remove.onclick=()=>{posts.splice(i,1);posts.forEach(t=>{if(!posts.some(x=>x.id===t.parent))t.parent=''});update()};heading.append(moveUp,moveDown,remove);wrap.append(heading);
-const grid=document.createElement('div');grid.className='fields';
-function field(title,key,kind='text',full=false){const box=document.createElement('div');if(full)box.className='full';const label=document.createElement('label');label.textContent=title;const input=document.createElement(kind==='textarea'?'textarea':'input');if(kind!=='textarea')input.type='text';input.value=p[key]??'';input.addEventListener('input',()=>{p[key]=input.value;persist();render()});box.append(label,input);grid.append(box)}
-field('表示名','name');field('@ID（@省略可）','handle');field('投稿日時','date');const selbox=document.createElement('div');const lab=document.createElement('label');lab.textContent='返信先';const sel=document.createElement('select');sel.innerHTML='<option value="">親投稿（返信なし）</option>';posts.filter(x=>x.id!==p.id).forEach(x=>{const option=document.createElement('option');option.value=x.id;option.textContent=x.name+'：'+x.body.slice(0,20);sel.append(option)});sel.value=p.parent||'';sel.onchange=()=>{p.parent=sel.value;persist();render()};selbox.append(lab,sel);grid.append(selbox);
-field('投稿内容','body','textarea',true);field('投稿画像URL（最大2枚、改行区切り）','media','textarea',true);field('引用投稿の表示名','quoteName');field('引用投稿の@ID','quoteHandle');field('引用投稿の本文','quoteBody','textarea',true);field('引用投稿の画像URL','quoteMedia','textarea',true);field('翻訳元の言語（空欄なら非表示）','translation');field('表示回数','views');field('いいね','likes');field('リポスト','reposts');field('返信数','replies');field('アイコン（画像URL / アップロード後の画像）','avatar','textarea',true);const badgeBox=document.createElement('div');const badgeLabel=document.createElement('label');badgeLabel.textContent='認証バッジ';const badge=document.createElement('input');badge.type='checkbox';badge.checked=!!p.verified;badge.style.width='auto';badge.onchange=()=>{p.verified=badge.checked;persist();render()};badgeBox.append(badgeLabel,badge);grid.append(badgeBox);
-const uploadBox=document.createElement('div');uploadBox.className='full';const uploadLabel=document.createElement('label');uploadLabel.textContent='アイコンを端末から選択';const file=document.createElement('input');file.type='file';file.accept='image/*';file.onchange=()=>{const selected=file.files?.[0];if(!selected)return;const reader=new FileReader();reader.onload=()=>{p.avatar=String(reader.result);update()};reader.readAsDataURL(selected)};uploadBox.append(uploadLabel,file);grid.append(uploadBox);wrap.append(grid);return wrap}
+const collapsedPosts=new Set();
+function makeEditor(p,i){
+ const wrap=document.createElement('div');wrap.className='postEditor';
+ const heading=document.createElement('div');heading.className='postHead';
+ const toggle=document.createElement('button');toggle.className='editorToggle';toggle.textContent=(collapsedPosts.has(p.id)?'▸ ':'▾ ')+(p.name||'投稿 '+(i+1))+'  ·  '+String(p.body||'').replace(/\s+/g,' ').slice(0,22);toggle.title='クリックで編集欄を折りたたむ';toggle.onclick=()=>{if(collapsedPosts.has(p.id))collapsedPosts.delete(p.id);else collapsedPosts.add(p.id);editors()};
+ const moveUp=document.createElement('button');moveUp.textContent='↑';moveUp.disabled=i===0;moveUp.onclick=()=>{[posts[i-1],posts[i]]=[posts[i],posts[i-1]];update()};
+ const moveDown=document.createElement('button');moveDown.textContent='↓';moveDown.disabled=i===posts.length-1;moveDown.onclick=()=>{[posts[i+1],posts[i]]=[posts[i],posts[i+1]];update()};
+ const remove=document.createElement('button');remove.textContent='削除';remove.disabled=posts.length===1;remove.onclick=()=>{posts.splice(i,1);collapsedPosts.delete(p.id);posts.forEach(t=>{if(!posts.some(x=>x.id===t.parent))t.parent=''});update()};
+ heading.append(toggle,moveUp,moveDown,remove);wrap.append(heading);
+ if(collapsedPosts.has(p.id))return wrap;
+ const grid=document.createElement('div');grid.className='fields editorFields';
+ const details=document.createElement('details');details.className='advancedEditor';const summary=document.createElement('summary');summary.textContent='詳細設定（画像・引用・翻訳・数値など）';details.append(summary);const advanced=document.createElement('div');advanced.className='fields';details.append(advanced);
+ function field(title,key,kind='text',full=false,destination=grid){
+  const box=document.createElement('div');if(full)box.className='full';
+  const label=document.createElement('label');label.textContent=title;
+  const input=document.createElement(kind==='textarea'?'textarea':'input');
+  if(kind!=='textarea')input.type='text';
+  if(kind==='textarea')input.rows=key==='body'?3:2;
+  input.value=p[key]??'';input.addEventListener('input',()=>{p[key]=input.value;persist();render();toggle.textContent='▾ '+(p.name||'投稿 '+(i+1))+'  ·  '+String(p.body||'').replace(/\s+/g,' ').slice(0,22)});
+  box.append(label,input);destination.append(box)
+ }
+ field('表示名','name');field('@ID','handle');field('投稿日時','date');
+ const selbox=document.createElement('div');const lab=document.createElement('label');lab.textContent='返信先';
+ const sel=document.createElement('select');sel.innerHTML='<option value="">親投稿（返信なし）</option>';
+ posts.filter(x=>x.id!==p.id).forEach(x=>{const option=document.createElement('option');option.value=x.id;option.textContent=x.name+'：'+x.body.slice(0,20);sel.append(option)});
+ sel.value=p.parent||'';sel.onchange=()=>{p.parent=sel.value;persist();render()};selbox.append(lab,sel);grid.append(selbox);
+ field('投稿内容','body','textarea',true);
+ field('表示回数','views','text',false,advanced);field('いいね','likes','text',false,advanced);field('リポスト','reposts','text',false,advanced);field('返信数','replies','text',false,advanced);
+ field('投稿画像URL（最大2枚・改行区切り）','media','textarea',true,advanced);
+ field('引用投稿の表示名','quoteName','text',false,advanced);field('引用投稿の@ID','quoteHandle','text',false,advanced);
+ field('引用投稿の本文','quoteBody','textarea',true,advanced);field('引用投稿の画像URL','quoteMedia','textarea',true,advanced);
+ field('翻訳元の言語','translation','text',false,advanced);
+ const badgeBox=document.createElement('div');const badgeLabel=document.createElement('label');badgeLabel.textContent='認証バッジ';const badge=document.createElement('input');badge.type='checkbox';badge.checked=!!p.verified;badge.style.width='auto';badge.onchange=()=>{p.verified=badge.checked;persist();render()};badgeBox.append(badgeLabel,badge);advanced.append(badgeBox);
+ field('アイコン画像URL','avatar','text',true,advanced);
+ const uploadBox=document.createElement('div');uploadBox.className='full';const uploadLabel=document.createElement('label');uploadLabel.textContent='アイコンを端末から選択';const file=document.createElement('input');file.type='file';file.accept='image/*';file.onchange=()=>{const selected=file.files?.[0];if(!selected)return;const reader=new FileReader();reader.onload=()=>{p.avatar=String(reader.result);update()};reader.readAsDataURL(selected)};uploadBox.append(uploadLabel,file);advanced.append(uploadBox);
+ wrap.append(grid,details);return wrap
+}
 function editors(){el('editors').replaceChildren(...posts.map(makeEditor))}
 
 const icons={
