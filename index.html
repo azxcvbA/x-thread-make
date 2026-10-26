@@ -3,12 +3,53 @@
 <title>X風ツイート・リプライメーカー</title>
 <style>
 :root{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;color-scheme:dark;background:#090d13;color:#e7edf3}*{box-sizing:border-box}body{margin:0}header{padding:18px 22px;border-bottom:1px solid #2b3542}h1{font-size:21px;margin:0 0 6px}p{margin:0;color:#9eabb9;font-size:13px}.layout{display:grid;grid-template-columns:minmax(330px,430px) minmax(360px,1fr);gap:24px;padding:22px;align-items:start}.panel{background:#121a24;border:1px solid #2b3542;border-radius:16px;padding:17px}.toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}button,.fileButton{border:1px solid #344252;border-radius:9px;padding:9px 13px;background:#263342;color:white;cursor:pointer;font:inherit;font-size:13px}button.primary{background:#1d9bf0;border-color:#1d9bf0}button:disabled{opacity:.45;cursor:not-allowed}input,textarea,select{background:#0c141e;color:#ecf2f6;border:1px solid #344252;border-radius:8px;padding:9px;width:100%;font:inherit;font-size:13px}textarea{min-height:80px;resize:vertical}label{font-size:12px;color:#b2c0cd;display:block;margin:10px 0 4px}.fields{display:grid;grid-template-columns:1fr 1fr;gap:0 10px}.postEditor{border:1px solid #334051;border-radius:12px;padding:14px;margin:12px 0}.postHead{display:flex;align-items:center;gap:10px}.postHead b{flex:1}.postHead button{padding:5px 9px}.full{grid-column:1/-1}.preview{overflow:auto}.canvasWrap{display:flex;justify-content:center;padding:16px;background:#0b111a;border-radius:12px}.thread{width:600px;max-width:100%;background:#000;color:#eff3f4;padding:20px 21px;border:1px solid #2f3336;font-family:Arial,system-ui,sans-serif}.thread.light{background:white;color:#0f1419;border-color:#cfd9de}.tweet{position:relative;display:grid;grid-template-columns:48px 1fr;gap:10px;padding:12px 0;border-bottom:1px solid #2f3336}.thread.light .tweet{border-color:#eff3f4}.tweet:last-child{border:0}.tweet.child{margin-left:20px}.avatar{width:43px;height:43px;border-radius:50%;object-fit:cover;background:#243747;border:1px solid #3a4650}.avatarFallback{width:43px;height:43px;display:grid;place-items:center;border-radius:50%;background:#2b4865;font-size:21px}.line{position:absolute;top:56px;bottom:-14px;left:21px;width:2px;background:#39414a;z-index:0}.meta{display:flex;align-items:center;gap:6px;flex-wrap:wrap;font-size:14px}.name{font-weight:700}.muted{color:#71767b}.bodyText{font-size:16px;white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.48;margin:7px 0 11px}.stats{display:flex;justify-content:space-between;gap:12px;font-size:12px;color:#71767b}.stat{display:flex;align-items:center;gap:5px}.replying{color:#1d9bf0;font-size:12px;margin-top:5px}.info{font-size:12px;color:#9eabb9;line-height:1.6;margin-top:12px}.fileButton input{display:none}@media(max-width:880px){.layout{grid-template-columns:1fr;padding:12px}.panel{padding:12px}.thread{width:600px;min-width:430px}.canvasWrap{justify-content:start}}
+
+/* PC版Xライトモード・90%スクリーンショット基準 */
+:root{color-scheme:light;background:#f2f5f8;color:#0f1419}
+body{background:#f2f5f8}header{background:#fff;border-color:#dce3e8}header p{color:#536471}
+.panel{background:#fff;border-color:#dce3e8}button,.fileButton{background:#f5f8fa;color:#0f1419;border-color:#cfd9de}button.primary{background:#1d9bf0;color:white;border-color:#1d9bf0}
+input,textarea,select{background:white;color:#0f1419;border-color:#cfd9de}label{color:#536471}
+.postEditor{border-color:#dce3e8}.canvasWrap{background:#e9eef3}.info{color:#536471}
+.thread{width:530px;max-width:none;padding:0;background:white;color:#0f1419;border:1px solid #eff3f4;font-family:Arial,"Helvetica Neue",sans-serif}
+.thread.light{background:white;color:#0f1419;border-color:#eff3f4}
+.tweet{grid-template-columns:40px minmax(0,1fr);gap:8px;padding:10px 12px 9px;border-bottom:1px solid #eff3f4}
+.tweet.child{margin-left:0}
+.avatar,.avatarFallback{width:36px;height:36px;border:0}.avatarFallback{font-size:18px}
+.line{left:17px;top:41px;bottom:-17px;background:#cfd9de;width:2px}
+.meta{font-size:13px;gap:4px;white-space:nowrap;overflow:hidden;flex-wrap:nowrap}
+.meta .name{flex-shrink:0;overflow:hidden;text-overflow:ellipsis;max-width:46%}
+.meta .muted{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#536471}
+.bodyText{font-size:14px;line-height:1.35;margin:3px 0 10px}
+.stats{font-size:12px;color:#536471;gap:5px;align-items:center}
+.stat{display:flex;align-items:center;gap:5px;white-space:nowrap}
+.stat svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.replying{font-size:12px;color:#536471;margin:2px 0}
+.replying strong{color:#1d9bf0;font-weight:400}
+.verified{display:inline-flex;align-items:center;color:#1d9bf0;flex-shrink:0}
+.verified svg{width:14px;height:14px;fill:#1d9bf0}
+.verified path{stroke:#fff;fill:none;stroke-width:2}
+.more{margin-left:auto;color:#536471;font-size:16px;flex-shrink:0}
+.media{margin:8px 0 10px;border:1px solid #cfd9de;border-radius:13px;overflow:hidden;display:grid;gap:2px;background:#cfd9de;max-height:510px}
+.media img{width:100%;height:100%;object-fit:cover;display:block;min-height:120px;max-height:510px}
+.media.double{grid-template-columns:1fr 1fr;height:225px}
+.media.single img{max-height:510px;object-fit:contain;background:white}
+.quote{border:1px solid #cfd9de;border-radius:14px;margin:8px 0 10px;overflow:hidden}
+.quote-inner{padding:11px;font-size:13px}
+.quote-head{display:flex;align-items:center;gap:5px;font-size:12px}
+.quote-head img,.quote-avatar{width:19px;height:19px;border-radius:50%;object-fit:cover;background:#d7e4ee}
+.quote-body{white-space:pre-wrap;overflow-wrap:anywhere;margin-top:5px;line-height:1.4}
+.quote-media{width:100%;max-height:230px;object-fit:cover;display:block;margin-top:8px}
+.translation{font-size:12px;color:#536471;margin:2px 0 3px}.translation a{color:#1d9bf0}
+.detail-meta{font-size:13px;color:#536471;padding:8px 0;border-bottom:1px solid #eff3f4;margin-bottom:9px}
+.thread.detail .tweet:first-child .bodyText{font-size:17px;line-height:1.45}
+.thread.detail .tweet:first-child .stats{padding-top:9px;border-top:1px solid #eff3f4}
+@media(max-width:880px){.thread{min-width:530px}.canvasWrap{overflow-x:auto}}
 </style></head><body>
 <header><h1>X風ツイート・リプライメーカー</h1><p>1936年の架空SNSにも。画像・プロフィール・数字を自由に編集し、会話ごとPNGに保存。</p></header>
 <main class="layout"><section class="panel"><div class="toolbar">
 <button class="primary" id="add">＋投稿を追加</button><button id="save">JSON保存</button><label class="fileButton">JSON読込<input type="file" id="load" accept=".json,application/json"></label><button id="reset">初期化</button></div>
 <div class="fields"><div><label>テーマ</label><select id="theme"><option value="dark">ダーク</option><option value="light">ライト</option></select></div><div><label>出力サイズ</label><select id="scale"><option value="2">2倍</option><option value="3">3倍</option><option value="1">等倍</option></select></div></div>
-<div id="editors"></div></section>
+<div class="fields"><div><label>表示形式</label><select id="mode"><option value="timeline">タイムライン</option><option value="detail">投稿詳細</option></select></div></div><div id="editors"></div></section>
 <section class="panel"><div class="toolbar"><button class="primary" id="export">PNGを書き出す</button><button id="previewButton">プレビュー更新</button></div><div class="canvasWrap"><div class="thread" id="thread"></div></div><div class="info">画像はブラウザ内で処理します。投稿やアイコンは外部サーバーにアップロードしません。架空の投稿として利用してください。PNG出力時に文字やアイコンが崩れる場合は、別のブラウザでもお試しください。</div></section></main>
 <script src="https://cdn.jsdelivr.net/npm/html-to-image@1.11.11/dist/html-to-image.min.js"></script>
 <script>
@@ -27,18 +68,52 @@ function makeEditor(p,i){const wrap=document.createElement('div');wrap.className
 const grid=document.createElement('div');grid.className='fields';
 function field(title,key,kind='text',full=false){const box=document.createElement('div');if(full)box.className='full';const label=document.createElement('label');label.textContent=title;const input=document.createElement(kind==='textarea'?'textarea':'input');if(kind!=='textarea')input.type='text';input.value=p[key]??'';input.addEventListener('input',()=>{p[key]=input.value;persist();render()});box.append(label,input);grid.append(box)}
 field('表示名','name');field('@ID（@省略可）','handle');field('投稿日時','date');const selbox=document.createElement('div');const lab=document.createElement('label');lab.textContent='返信先';const sel=document.createElement('select');sel.innerHTML='<option value="">親投稿（返信なし）</option>';posts.filter(x=>x.id!==p.id).forEach(x=>{const option=document.createElement('option');option.value=x.id;option.textContent=x.name+'：'+x.body.slice(0,20);sel.append(option)});sel.value=p.parent||'';sel.onchange=()=>{p.parent=sel.value;persist();render()};selbox.append(lab,sel);grid.append(selbox);
-field('投稿内容','body','textarea',true);field('表示回数','views');field('いいね','likes');field('リポスト','reposts');field('返信数','replies');field('アイコン（画像URL / アップロード後の画像）','avatar','textarea',true);
+field('投稿内容','body','textarea',true);field('投稿画像URL（最大2枚、改行区切り）','media','textarea',true);field('引用投稿の表示名','quoteName');field('引用投稿の@ID','quoteHandle');field('引用投稿の本文','quoteBody','textarea',true);field('引用投稿の画像URL','quoteMedia','textarea',true);field('翻訳元の言語（空欄なら非表示）','translation');field('表示回数','views');field('いいね','likes');field('リポスト','reposts');field('返信数','replies');field('アイコン（画像URL / アップロード後の画像）','avatar','textarea',true);const badgeBox=document.createElement('div');const badgeLabel=document.createElement('label');badgeLabel.textContent='認証バッジ';const badge=document.createElement('input');badge.type='checkbox';badge.checked=!!p.verified;badge.style.width='auto';badge.onchange=()=>{p.verified=badge.checked;persist();render()};badgeBox.append(badgeLabel,badge);grid.append(badgeBox);
 const uploadBox=document.createElement('div');uploadBox.className='full';const uploadLabel=document.createElement('label');uploadLabel.textContent='アイコンを端末から選択';const file=document.createElement('input');file.type='file';file.accept='image/*';file.onchange=()=>{const selected=file.files?.[0];if(!selected)return;const reader=new FileReader();reader.onload=()=>{p.avatar=String(reader.result);update()};reader.readAsDataURL(selected)};uploadBox.append(uploadLabel,file);grid.append(uploadBox);wrap.append(grid);return wrap}
 function editors(){el('editors').replaceChildren(...posts.map(makeEditor))}
-function render(){const target=el('thread');target.classList.toggle('light',theme==='light');target.replaceChildren();posts.forEach((p,i)=>{const item=document.createElement('article');item.className='tweet'+(p.parent?' child':'');const avatarBox=document.createElement('div');if(p.avatar){const img=document.createElement('img');img.className='avatar';img.src=p.avatar;img.onerror=()=>{img.replaceWith(fallback(p))};avatarBox.append(img)}else avatarBox.append(fallback(p));if(posts.slice(i+1).some(x=>x.parent===p.id)){const line=document.createElement('div');line.className='line';avatarBox.append(line)}const main=document.createElement('div');const meta=document.createElement('div');meta.className='meta';meta.innerHTML='<span class="name">'+escapeHTML(p.name)+'</span><span class="muted">@'+escapeHTML(p.handle.replace(/^@/,''))+' · '+escapeHTML(p.date)+'</span>';main.append(meta);if(p.parent){const reply=document.createElement('div');reply.className='replying';const parent=posts.find(x=>x.id===p.parent);reply.textContent='@'+(parent?.handle||'unknown').replace(/^@/,'')+' さんへの返信';main.append(reply)}const body=document.createElement('div');body.className='bodyText';body.textContent=p.body;main.append(body);const stats=document.createElement('div');stats.className='stats';[['♡',p.likes],['↻',p.reposts],['◇',p.replies],['▥',p.views]].forEach(([icon,value])=>{const s=document.createElement('span');s.className='stat';s.textContent=icon+' '+value;stats.append(s)});main.append(stats);item.append(avatarBox,main);target.append(item)})}
+
+const icons={
+reply:'<path d="M21 11.5a8.5 8.5 0 0 1-8.5 8.5 9 9 0 0 1-4-.9L3 21l1.9-5.5A9 9 0 1 1 21 11.5Z"/>',
+repost:'<path d="m3 8 3-3 3 3M6 5v11a3 3 0 0 0 3 3h4M21 16l-3 3-3-3m3 3V8a3 3 0 0 0-3-3h-4"/>',
+like:'<path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8Z"/>',
+views:'<path d="M4 20V12m5 8V4m5 16v-9m5 9V7"/>',
+bookmark:'<path d="M6 3h12v18l-6-4-6 4Z"/>',
+share:'<path d="M12 16V3m-5 5 5-5 5 5M4 14v6h16v-6"/>'
+};
+function svgIcon(name){return '<svg viewBox="0 0 24 24" aria-hidden="true">'+icons[name]+'</svg>'}
+function safeMedia(value){return String(value||'').split(/\n/).map(x=>x.trim()).filter(x=>/^(https?:\/\/|data:image\/)/i.test(x)).slice(0,2)}
+function addMedia(parent,urls){if(!urls.length)return;const box=document.createElement('div');box.className='media '+(urls.length>1?'double':'single');urls.forEach(src=>{const img=document.createElement('img');img.src=src;img.alt='投稿画像';box.append(img)});parent.append(box)}
+function render(){
+const target=el('thread');target.classList.toggle('light',theme==='light');target.classList.toggle('detail',el('mode')?.value==='detail');target.replaceChildren();
+posts.forEach((p,i)=>{
+const item=document.createElement('article');item.className='tweet'+(p.parent?' child':'');
+const avatarBox=document.createElement('div');
+if(p.avatar){const img=document.createElement('img');img.className='avatar';img.src=p.avatar;img.onerror=()=>img.replaceWith(fallback(p));avatarBox.append(img)}else avatarBox.append(fallback(p));
+if(posts.slice(i+1).some(x=>x.parent===p.id)){const line=document.createElement('div');line.className='line';avatarBox.append(line)}
+const main=document.createElement('div');
+const meta=document.createElement('div');meta.className='meta';
+const name=document.createElement('span');name.className='name';name.textContent=p.name;meta.append(name);
+if(p.verified){const v=document.createElement('span');v.className='verified';v.innerHTML='<svg viewBox="0 0 24 24"><path fill="#1d9bf0" d="m12 1.5 3 1.8 3.5.1 1.3 3.3 2.7 2.2-.8 3.4.8 3.4-2.7 2.2-1.3 3.3-3.5.1-3 1.8-3-1.8-3.5-.1-1.3-3.3-2.7-2.2.8-3.4-.8-3.4 2.7-2.2 1.3-3.3 3.5-.1Z"/><path d="m7.5 12 3 3 6-6"/></svg>';meta.append(v)}
+const muted=document.createElement('span');muted.className='muted';muted.textContent='@'+String(p.handle||'').replace(/^@/,'')+' · '+p.date;meta.append(muted);
+const more=document.createElement('span');more.className='more';more.textContent='···';meta.append(more);main.append(meta);
+if(p.parent){const reply=document.createElement('div');reply.className='replying';const parent=posts.find(x=>x.id===p.parent);reply.innerHTML='返信先: <strong>@'+escapeHTML(String(parent?.handle||'unknown').replace(/^@/,''))+'</strong>さん';main.append(reply)}
+if(p.translation){const trans=document.createElement('div');trans.className='translation';trans.innerHTML='◉ '+escapeHTML(p.translation)+'からの翻訳 <a>原文を表示</a>';main.append(trans)}
+const body=document.createElement('div');body.className='bodyText';body.textContent=p.body;main.append(body);
+addMedia(main,safeMedia(p.media));
+if(p.quoteName||p.quoteBody){const quote=document.createElement('div');quote.className='quote';const inner=document.createElement('div');inner.className='quote-inner';const head=document.createElement('div');head.className='quote-head';const icon=document.createElement('span');icon.className='quote-avatar';head.append(icon);const qn=document.createElement('b');qn.textContent=p.quoteName||'引用元';head.append(qn);const qh=document.createElement('span');qh.className='muted';qh.textContent='@'+String(p.quoteHandle||'user').replace(/^@/,'');head.append(qh);inner.append(head);const qb=document.createElement('div');qb.className='quote-body';qb.textContent=p.quoteBody||'';inner.append(qb);quote.append(inner);const qm=safeMedia(p.quoteMedia);if(qm.length){const img=document.createElement('img');img.className='quote-media';img.src=qm[0];quote.append(img)}main.append(quote)}
+if(el('mode')?.value==='detail'&&i===0){const d=document.createElement('div');d.className='detail-meta';d.textContent=p.date+' · '+p.views+' 件の表示';main.append(d)}
+const stats=document.createElement('div');stats.className='stats';
+[['reply',p.replies],['repost',p.reposts],['like',p.likes],['views',p.views],['bookmark',''],['share','']].forEach(([icon,value])=>{const s=document.createElement('span');s.className='stat';s.innerHTML=svgIcon(icon);const n=document.createElement('span');n.textContent=value||'';s.append(n);stats.append(s)});
+main.append(stats);item.append(avatarBox,main);target.append(item)
+})}
 function fallback(p){const d=document.createElement('div');d.className='avatarFallback';d.textContent=(p.name||'?').slice(0,1);return d}
 function update(){persist();editors();render()}
 el('add').onclick=()=>{posts.push({id:'p'+Date.now().toString(36)+Math.random().toString(36).slice(2,5),parent:posts.at(-1)?.id||'',name:'新しい国家',handle:'country_1936',avatar:'',date:'1936年1月1日',body:'ここに本文',views:'0',likes:'0',reposts:'0',replies:'0'});update();el('editors').lastElementChild.scrollIntoView({behavior:'smooth',block:'nearest'})};
-el('theme').onchange=e=>{theme=e.target.value;render()};
+el('theme').value='light';theme='light';el('theme').onchange=e=>{theme=e.target.value;render()};el('mode').onchange=render;
 el('previewButton').onclick=render;
 el('reset').onclick=()=>{if(confirm('現在の編集内容を初期化しますか？')){posts=structuredClone(sample);update()}};
 el('save').onclick=()=>download(new Blob([JSON.stringify({version:1,posts},null,2)],{type:'application/json'}),'x-thread.json');
-el('load').onchange=async e=>{const file=e.target.files?.[0];if(!file)return;try{const data=JSON.parse(await file.text());const p=Array.isArray(data)?data:data.posts;if(!Array.isArray(p)||!p.length||p.length>100)throw Error('投稿データが不正です');posts=p.map((x,i)=>({id:String(x.id||'item'+i),parent:String(x.parent||''),name:String(x.name||''),handle:String(x.handle||''),avatar:String(x.avatar||''),date:String(x.date||''),body:String(x.body||''),views:String(x.views||'0'),likes:String(x.likes||'0'),reposts:String(x.reposts||'0'),replies:String(x.replies||'0')}));update()}catch(err){alert('読み込めませんでした：'+err.message)}e.target.value=''};
+el('load').onchange=async e=>{const file=e.target.files?.[0];if(!file)return;try{const data=JSON.parse(await file.text());const p=Array.isArray(data)?data:data.posts;if(!Array.isArray(p)||!p.length||p.length>100)throw Error('投稿データが不正です');posts=p.map((x,i)=>({id:String(x.id||'item'+i),parent:String(x.parent||''),name:String(x.name||''),handle:String(x.handle||''),avatar:String(x.avatar||''),date:String(x.date||''),body:String(x.body||''),views:String(x.views||'0'),likes:String(x.likes||'0'),reposts:String(x.reposts||'0'),replies:String(x.replies||'0'),media:String(x.media||''),quoteName:String(x.quoteName||''),quoteHandle:String(x.quoteHandle||''),quoteBody:String(x.quoteBody||''),quoteMedia:String(x.quoteMedia||''),translation:String(x.translation||''),verified:!!x.verified}));update()}catch(err){alert('読み込めませんでした：'+err.message)}e.target.value=''};
 el('export').onclick=async()=>{const btn=el('export');btn.disabled=true;btn.textContent='画像を生成中…';try{if(!window.htmlToImage)throw Error('画像書き出しライブラリを読み込めませんでした');await document.fonts.ready;const scale=Number(el('scale').value);const node=el('thread');const data=await htmlToImage.toBlob(node,{pixelRatio:scale,backgroundColor:theme==='light'?'#ffffff':'#000000',cacheBust:true});if(!data)throw Error('画像の生成に失敗しました');download(data,'x-thread.png')}catch(err){alert('PNG出力に失敗しました：'+err.message)}finally{btn.disabled=false;btn.textContent='PNGを書き出す'}};
 function download(blob,name){const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),3000)}
 update();
